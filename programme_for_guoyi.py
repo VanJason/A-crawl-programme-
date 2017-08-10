@@ -13,8 +13,10 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 
 class Programme_guoyi():
+	# def __init__(self):
+	# 	pass
 	
-	def get_Web_guoyi(url):
+	def get_Web_guoyi(self,url,typetext,keyword):
 		"""
 		打开国义招标网并进行关键词搜索
 		返回网站
@@ -25,9 +27,9 @@ class Programme_guoyi():
 		# driver.set_page_load_timeout(30)
 		# driver.set_script_timeout(30)
 		driver.get(url)
-		driver.find_element_by_link_text(u"招标公告").click()
+		driver.find_element_by_link_text(typetext).click()
 		driver.find_element_by_name("Keyword").clear()
-		driver.find_element_by_name("Keyword").send_keys(u"医院")
+		driver.find_element_by_name("Keyword").send_keys(keyword)
 		driver.find_element_by_css_selector("a > img").click()
 
 		return driver
@@ -51,7 +53,7 @@ class Programme_guoyi():
 		return driver
 		driver.quite()
 
-	def get_programme_guoyi(info):
+	def get_programme_guoyi(self,info):
 		"""doc.
    		寻找招标项目链接及名称方法
     	返回链接(数组形式)
@@ -69,7 +71,7 @@ class Programme_guoyi():
 
 		return weblist
 
-	def get_title_guoyi(soup):
+	def get_title_guoyi(self,soup):
 		"""
 		获取项目名称的方法
 		返回项目名称
@@ -78,7 +80,7 @@ class Programme_guoyi():
 		title = soup_name.get_text()
 
 		return title
-	def get_beginningtime_guoyi(soup):
+	def get_beginningtime_guoyi(self,soup):
 		"""
 		获取公布时间的方法
 		返回公布时间
@@ -88,7 +90,7 @@ class Programme_guoyi():
 
 		return beginningtime
 
-	def get_number_guoyi(soup):
+	def get_number_guoyi(self,soup):
 		"""
 		获取项目编号的方法
 		返回项目编号
@@ -98,14 +100,14 @@ class Programme_guoyi():
 
 		return number
 
-	def get_account_guoyi(soup):
+	def get_account_guoyi(self,soup):
 		pass
 
-	def get_showtime_guoyi(soup):
+	def get_showtime_guoyi(self,soup):
 		pass
 
 
-	def get_detail_guoyi(WBall,filename,state1,state2,state3,state4,state5,state6,state7,satet8):
+	def get_detail_guoyi(self,WBall,filename,state1,state2,state3,state4,state5,state6,state7,state8):
 		"""
 		对项目内容进行细化操作
 		返回
@@ -130,31 +132,38 @@ class Programme_guoyi():
 		i = 1
 
 		for web in WBall:
-			html = get_newWeb('http://www.gmgit.com/Notice/BidInfo/' + web)
+			html = urllib.request.urlopen('http://www.gmgit.com/Notice/BidInfo/' + web)
+			content = html.read()
+			html.close()
+			# html = self.get_newWeb_guoyi('http://www.gmgit.com/Notice/BidInfo/' + web)
 
-			soup = BeautifulSoup(html.page_source)
+			# soup = BeautifulSoup(html.page_source)
+			soup = BeautifulSoup(content)
 
 			message_list = []
 
 			soup_message = soup.find('span', id="ctl00_PageContent_Label_Content")
 
 			if soup_message is None:
-				new_content = soup.find(src=re.compile("HtmShow"))
-				content_web = new_content['src']
-				new_page = 'http://www.gmgit.com/Notice/BidInfo/' + content_web
+				None
+				# new_content = soup.find(src=re.compile("HtmShow"))
+				# content_web = new_content['src']
+				# new_page = 'http://www.gmgit.com/Notice/BidInfo/' + content_web
 
-				soupother = BeautifulSoup(get_newWeb(new_page).page_source)
-				newsoup_message = soupother.find('div', class_="Section1")
+				# # soupother = BeautifulSoup(self.get_newWeb_guoyi(new_page).page_source)
+				# html2 = urllib.request.urlopen(new_page)
+				# content2 = 
+				# newsoup_message = soupother.find('div', class_="Section1")
 
-				for mes1 in newsoup_message.stripped_strings:
-					message_list.append(mes1)
+				# for mes1 in newsoup_message.stripped_strings:
+				# 	message_list.append(mes1)
 			else:
 				for mes2 in soup_message.stripped_strings:
 					message_list.append(mes2)
 					"""将内容分块保存至数组"""
 
-			if satet1 is True:
-				sheet.write(i,0,get_beginningtime_guoyi(soup))
+			if state1 is True:
+				sheet.write(i,0,self.get_beginningtime_guoyi(soup))
 			else:
 				None
 
@@ -174,7 +183,7 @@ class Programme_guoyi():
 				None
 
 			if state5 is True:
-				sheet.write(i,5,get_title_guoyi(soup))
+				sheet.write(i,5,self.get_title_guoyi(soup))
 			else:
 				None
 
@@ -184,12 +193,12 @@ class Programme_guoyi():
 				None
 
 			if state7 is True:
-				sheet.write(i,7,get_showtime_guoyi(soup))
+				sheet.write(i,7,self.get_showtime_guoyi(soup))
 			else:
 				None
 
 			if state8 is True:
-				sheet.write(i,12,get_account_guoyi(soup))
+				sheet.write(i,12,self.get_account_guoyi(soup))
 
 				
 			i +=1
@@ -197,5 +206,7 @@ class Programme_guoyi():
 		print("sucess")
 
 		wbk.save(filename)
-
-	# get_detail_guoyi(get_programme_guoyi(get_Web_guoyi(url)))	
+# p = Programme_guoyi()
+# info = p.get_Web_guoyi("http://www.gmgit.com/","招标公告","医院")
+# WBall = p.get_programme_guoyi(info)
+# p.get_detail_guoyi(WBall,"testguoyi.xls",True,True,True,True,True,True,True,True)
