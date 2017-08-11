@@ -101,10 +101,16 @@ class Programme_guoyi():
 		return number
 
 	def get_account_guoyi(self,soup):
-		pass
+		return "测试，返回预算金额"
 
 	def get_showtime_guoyi(self,soup):
-		pass
+		return "测试，返回开标时间"
+	def get_agentcompany_guoyi(self,soup):
+		return "测试，返回代理机构"
+	def get_buyer_guoyi(self,soup):
+		return "测试，返回采购内容"
+	def get_money_guoyi(self,soup):
+		return "测试，返回中标金额"
 
 
 	def get_detail_guoyi(self,WBall,filename,state1,state2,state3,state4,state5,state6,state7,state8):
@@ -163,43 +169,37 @@ class Programme_guoyi():
 					"""将内容分块保存至数组"""
 
 			if state1 is True:
-				sheet.write(i,0,self.get_beginningtime_guoyi(soup))
-			else:
-				None
-
-			if state2 is True:
-				sheet.write(i,1,"http://www.gmgit.com/Notice/BidInfo/" + web)
-			else:
-				None
-
-			if state3 is True:	
-				sheet.write(i,3,None)
-			else:
-				None
-
-			if state4 is True:	
-				sheet.write(i,4,None)
-			else:
-				None
-
-			if state5 is True:
 				sheet.write(i,5,self.get_title_guoyi(soup))
 			else:
 				None
-
-			if state6 is True:
-				sheet.write(i,6,None)
+			if state2 is True:	
+				sheet.write(i,12,self.get_account_guoyi(soup))
 			else:
 				None
-
+			if state3 is True:
+				sheet.write(i,0,self.get_beginningtime_guoyi(soup))
+			else:
+				None
+			if state4 is True:	
+				sheet.write(i,3,self.get_agentcompany_guoyi(soup))
+			else:
+				None
+			if state5 is True:
+				sheet.write(i,1,"http://www.gmgit.com/Notice/BidInfo/" + web)
+			else:
+				None
+			if state6 is True:
+				sheet.write(i,11,self.get_money_guoyi(soup))
+			else:
+				None
 			if state7 is True:
 				sheet.write(i,7,self.get_showtime_guoyi(soup))
 			else:
 				None
-
 			if state8 is True:
-				sheet.write(i,12,self.get_account_guoyi(soup))
-
+				sheet.write(i,6,self.get_buyer_guoyi(soup))
+			else:
+				None
 				
 			i +=1
 
@@ -210,3 +210,4 @@ class Programme_guoyi():
 # info = p.get_Web_guoyi("http://www.gmgit.com/","招标公告","医院")
 # WBall = p.get_programme_guoyi(info)
 # p.get_detail_guoyi(WBall,"testguoyi.xls",True,True,True,True,True,True,True,True)
+
