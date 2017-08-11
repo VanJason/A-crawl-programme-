@@ -12,9 +12,9 @@ from selenium import webdriver
 from bs4 import BeautifulSoup
 import xlwt
 
-class Programme_gdcw:
+class Programme_gdcw():
 	
-	def get_content_gdcw(url,typetext,keyword,buyer):
+	def get_content_gdcw(self,url,typetext,keyword,buyer):
 		"""doc.
 	    网站打开方法
 	    返回网站
@@ -33,32 +33,27 @@ class Programme_gdcw:
 
 		return gdcw
 
-	def get_Web_gdcw(info):
+	def get_Web_gdcw(self,info):
 		"""
 		获取检索出的项目的链接
 		实现翻页
 		"""
-		i = 0
 		weblist=[]
 		
-		while i < 2:
-			soup = BeautifulSoup(info.page_source)
+		soup = BeautifulSoup(info.page_source)
 
-			website = soup.find_all(href=re.compile("showNotice"))
-			datalist = soup.find_all('em')
+		website = soup.find_all(href=re.compile("showNotice"))
+		datalist = soup.find_all('em')
 
-			for web in website:
-				gotoweb = web['href']
+		for web in website:
+			gotoweb = web['href']
 
-				weblist.append(gotoweb)
-			for data_unit in datalist:
-				dit = dit()
-			info.execute_script('var page=document.getElementsByName("pageIndex");var count=Number(page[0].value)+1;turnOverPage(count);')
-			i +=1
+			weblist.append(gotoweb)
+			# info.execute_script('var page=document.getElementsByName("pageIndex");var count=Number(page[0].value)+1;turnOverPage(count);')
 
 		return weblist
 
-	def get_title_gdcw(soup):
+	def get_title_gdcw(self,soup):
 		"""
 		获取项目名称的方法
 		"""
@@ -66,7 +61,7 @@ class Programme_gdcw:
 
 		return title.get_text()
 
-	def get_beginningtime_gdcw(soup):
+	def get_beginningtime_gdcw(self,soup):
 		"""
 		获取公布时间的方法
 		"""
@@ -97,7 +92,7 @@ class Programme_gdcw:
 			Btime = "无法获取"
 			return Btime
 
-	def get_agentcompany_gdcw(soup):
+	def get_agentcompany_gdcw(self,soup):
 		"""
 		获取代理机构的方法
 		"""
@@ -127,7 +122,7 @@ class Programme_gdcw:
 			agentname = "无法获取"
 			return agentname
 
-	def get_account_gdcw(soup):
+	def get_account_gdcw(self,soup):
 		"""
 		获取项目预算的方法
 		"""
@@ -157,7 +152,7 @@ class Programme_gdcw:
 			money = 0
 			return money 
 
-	def get_showtime_gdcw(soup):
+	def get_showtime_gdcw(self,soup):
 		"""
 		获取开标时间
 		"""
@@ -191,7 +186,7 @@ class Programme_gdcw:
 
 		return showtime
 
-	def get_buyer_gdcw(soup):
+	def get_buyer_gdcw(self,soup):
 		"""
 		获取采购人的方法
 		"""
@@ -219,10 +214,12 @@ class Programme_gdcw:
 			return buyer[7:]
 		else:
 			buyer = "无法获取"		
-			return buyer 	
+			return buyer 
+	def get_money_gdcw(self,soup):
+		return "测试，返回中标金额"	
 
 
-	def get_programme_gdcw(WBall,filename,state1,state2,state3,state4,state5,state6,state7,satet8):
+	def get_programme_gdcw(self,WBall,filename,state1,state2,state3,state4,state5,state6,state7,state8):
 		"""
 		总调用方法
 		写入EXCEL
@@ -256,21 +253,37 @@ class Programme_gdcw:
 			soup = BeautifulSoup(content)
 
 			if state1 is True:
-				sheet.write(i,0,get_beginningtime_gdcw(soup))
-			if state2 is True:
-				sheet.write(i,1,"http://www.gdgpo.gov.cn" + web)
+				sheet.write(i,5,self.get_title_gdcw(soup))
+			else:
+				None
+			if state2 is True:	
+				sheet.write(i,12,self.get_account_gdcw(soup))
+			else:
+				None
 			if state3 is True:
-				sheet.write(i,3,get_agentcompany_gdcw(soup))
-			if state4 is True:
-				sheet.write(i,4,get_buyer_gdcw(soup))
+				sheet.write(i,0,self.get_beginningtime_gdcw(soup))
+			else:
+				None
+			if state4 is True:	
+				sheet.write(i,3,self.get_agentcompany_gdcw(soup))
+			else:
+				None
 			if state5 is True:
-				sheet.write(i,5,get_title_gdcw(soup))
+				sheet.write(i,1,"http://www.gdgpo.gov.cn" + web)
+			else:
+				None
 			if state6 is True:
-				sheet.write(i,6,None)
+				sheet.write(i,11,self.get_money_gdcw(soup))
+			else:
+				None
 			if state7 is True:
-				sheet.write(i,7,get_showtime_gdcw(soup))
+				sheet.write(i,7,self.get_showtime_gdcw(soup))
+			else:
+				None
 			if state8 is True:
-				sheet.write(i,12,get_account_gdcw(soup))
+				sheet.write(i,6,self.get_buyer_gdcw(soup))
+			else:
+				None
 
 			i +=1
 
@@ -280,3 +293,8 @@ class Programme_gdcw:
 	# info = get_content('http://www.gdgpo.gov.cn/')
 	# WBall= get_Web(info)
 	# print(get_programme(WBall))
+
+
+
+
+
