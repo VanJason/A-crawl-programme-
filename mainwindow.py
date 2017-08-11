@@ -78,12 +78,12 @@ class MainWindow(QMainWindow, Ui_MainWindow,Programme_guoyi,Programme_gdcw,Progr
     """
     def zhaobiao(self,state):
         if state is True:
-            self.listrecord[1] = "招标公告"
+            self.listrecord[1] = "招标类"
         else:
             None    
     def zhongbiao(self,state):
         if state is True:
-            self.listrecord[1] = "中标公告"
+            self.listrecord[1] = "中标类"
         else:
             None
 
@@ -92,7 +92,7 @@ class MainWindow(QMainWindow, Ui_MainWindow,Programme_guoyi,Programme_gdcw,Progr
     定义信号
     """
     def filename(self,strtext):
-        self.strtext = strtext
+        self.strtext = strtext + ".xls"
         self.listrecord[2] = self.strtext
 
     """
@@ -160,16 +160,46 @@ class MainWindow(QMainWindow, Ui_MainWindow,Programme_guoyi,Programme_gdcw,Progr
         pass
     	# QtWidgets.QMessageBox.information(self.creatExcel,"标题","生成Excel成功")
     def setCreatExcel(self):
+
         if self.listrecord[0] =="guoyi":
             url = 'http://www.gmgit.com/'
+            if self.listrecord[1] =="招标类":
+                self.listrecord[1] = "招标公告"
+            elif self.listrecord[1] == "中标类":
+                self.listrecord[1] = "中标公告"
+            else:
+                QtWidgets.QMessageBox.information(self,"标题","请选择类型并重新爬虫")
+
             info = Programme_guoyi.get_Web_guoyi(self,url,self.listrecord[1],self.listrecord[4])
             WBall = Programme_guoyi.get_programme_guoyi(self,info)
             Programme_guoyi.get_detail_guoyi(self,WBall,self.listrecord[2],self.infolist[0],self.infolist[1],self.infolist[2],self.infolist[3],self.infolist[4],self.infolist[5],self.infolist[6],self.infolist[7])
             QtWidgets.QMessageBox.information(self.creatExcel,"标题","生成国义招标网爬虫成功")
+        
         elif self.listrecord[0] =="gdcw":
-            None
+            url = 'http://www.gdgpo.gov.cn/'
+            if self.listrecord[1] == "招标类":
+                self.listrecord[1] = "采购公告"
+            elif self.listrecord[1] =="中标类":
+                self.listrecord[1] = "中标公告"
+            else:
+                QtWidgets.QMessageBox.information(self,"标题","请选择类型并重新爬虫")
+
+            info = Programme_gdcw.get_content_gdcw(self,url,self.listrecord[1],self.listrecord[4],self.listrecord[3])
+            WBall = Programme_gdcw.get_Web_gdcw(self,info)
+            Programme_gdcw.get_programme_gdcw(self,WBall,self.listrecord[2],self.infolist[0],self.infolist[1],self.infolist[2],self.infolist[3],self.infolist[4],self.infolist[5],self.infolist[6],self.infolist[7])
+            QtWidgets.QMessageBox.information(self.creatExcel,"标题","生成广东招标网爬虫成功")
+        
         elif self.listrecord[0] == "gzcw":
-            None
+            if self.listrecord[1] == "招标类":
+                url = 'http://www.gzggzy.cn/cms/wz/view/index/layout2/zfcglist.jsp?siteId=1&channelId=456'
+            elif self.listrecord[1] == "中标类":
+                url = 'http://www.gzggzy.cn/cms/wz/view/index/layout2/zfcglist.jsp?siteId=1&channelId=458'
+            else:
+                QtWidgets.QMessageBox.information(self,"标题","请选择类型并重新爬虫")
+            info = Programme_gzcw.get_content2_gzcw(self,url,self.listrecord[4])
+            WBall = Programme_gzcw.get_web_gzcw(self,info)
+            Programme_gzcw.get_detail_gzcw(self,WBall,self.listrecord[2],self.infolist[0],self.infolist[1],self.infolist[2],self.infolist[3],self.infolist[4],self.infolist[5],self.infolist[6],self.infolist[7])
+            QtWidgets.QMessageBox.information(self.creatExcel,"标题","生成广州公共资源交易网爬虫成功")
         else:
             QtWidgets.QMessageBox.information(self.creatExcel,"标题","请选择要爬虫的网站")
 
